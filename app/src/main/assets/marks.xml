@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<list>
+    <mark>
+        <name>Tower RMYS</name>
+        <lat>-37.8640</lat>
+        <lon>144.9638</lon>
+    </mark>
+    <mark>
+        <name>A Mark</name>
+        <lat>-37.8648</lat>
+        <lon>144.9580</lon>
+    </mark>
+    <mark>
+        <name>B Mark</name>
+        <lat>-37.8878</lat>
+        <lon>144.9522</lon>
+    </mark>
+    <mark>
+        <name>C Mark</name>
+        <lat>-37.8700</lat>
+        <lon>144.9400</lon>
+    </mark>
+    <mark>
+        <name>D Mark</name>
+        <lat>-37.8582</lat>
+        <lon>144.9578</lon>
+    </mark>
+    <mark>
+        <name>E Mark</name>
+        <lat>-37.8692</lat>
+        <lon>144.9632</lon>
+    </mark>
+    <mark>
+        <name>F Mark</name>
+        <lat>-37.8931</lat>
+        <lon>144.9385</lon>
+    </mark>
+    <mark>
+        <name>G Mark</name>
+        <lat>-37.8490</lat>
+        <lon>144.9351</lon>
+    </mark>
+    <mark>
+        <name>H Mark</name>
+        <lat>-37.8643</lat>
+        <lon>144.9615</lon>
+    </mark>
+    <mark>
+        <name>P3</name>
+        <lat>-37.8643</lat>
+        <lon>144.88117</lon>
+    </mark>
+    <mark>
+        <name>R2</name>
+        <lat>-37.9093</lat>
+        <lon>144.9390</lon>
+    </mark>
+    <mark>
+        <name>R3</name>
+        <lat>-37.8863</lat>
+        <lon>144.9397</lon>
+    </mark>
+    <mark>
+        <name>RBYC1</name>
+        <lat>-37.9105</lat>
+        <lon>144.9707</lon>
+    </mark>
+    <mark>
+        <name>RBYC4</name>
+        <lat>-37.8935</lat>
+        <lon>144.9513</lon>
+    </mark>
+    <mark>
+        <name>RBYC5</name>
+        <lat>-37.8964</lat>
+        <lon>144.9746</lon>
+    </mark>
+    <mark>
+        <name>SYC1</name>
+        <lat>-37.9633</lat>
+        <lon>144.9815</lon>
+    </mark>
+</list>
