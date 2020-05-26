@@ -137,11 +137,13 @@ public class MainActivity extends AppCompatActivity {
     // UI Widgets.
     private Button mStartUpdatesButton;
     private Button mStopUpdatesButton;
+    private TextView mNextMarkTextView;
     private TextView mLastUpdateTimeTextView;
     private TextView mLatitudeTextView;
     private TextView mLongitudeTextView;
 
     // Labels.
+    private String mNextMarkLabel;
     private String mLatitudeLabel;
     private String mLongitudeLabel;
     private String mLastUpdateTimeLabel;
@@ -157,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private String mLastUpdateTime;
 
+//    String  nextMark = "A Mark";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,12 +168,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Locate the UI widgets.
-
+        mNextMarkTextView = (TextView) findViewById(R.id.next_mark);
         mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
         mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
 
         // Set labels.
+        mNextMarkLabel = getResources().getString(R.string.next_mark);
         mLatitudeLabel = getResources().getString(R.string.latitude_label);
         mLongitudeLabel = getResources().getString(R.string.longitude_label);
         mLastUpdateTimeLabel = getResources().getString(R.string.last_update_time_label);
@@ -367,9 +372,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     *  Set next destination mark
+     */
+    public String setNextMark() {
+
+        // Temporary assignment of next mark
+        // TODO UI interface
+        String nextMark = "B Mark";
+          mNextMarkTextView.setText(mNextMarkLabel + ": " + nextMark);
+
+          return nextMark;
+    }
+
+
+    /**
+     * Retrieve next mark location
+     */
+
+
+    /**
      * Updates all UI fields.
      */
     private void updateUI() {
+        setNextMark();
         updateLocationUI();
     }
 
@@ -378,12 +403,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
-            mLatitudeTextView.setText(String.format(Locale.ENGLISH, "%s: %f", mLatitudeLabel,
-                    mCurrentLocation.getLatitude()));
-            mLongitudeTextView.setText(String.format(Locale.ENGLISH, "%s: %f", mLongitudeLabel,
-                    mCurrentLocation.getLongitude()));
-            mLastUpdateTimeTextView.setText(String.format(Locale.ENGLISH, "%s: %s",
-                    mLastUpdateTimeLabel, mLastUpdateTime));
+            mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
+            mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
+            mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + mLastUpdateTime);
         }
     }
 
