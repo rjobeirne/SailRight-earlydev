@@ -136,11 +136,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView mLastUpdateTimeTextView;
     private TextView mLatitudeTextView;
     private TextView mLongitudeTextView;
+    private TextView mSpeedTextView;
+    private TextView mHeadingTextView;
 
     // Labels.
     private String mNextMarkLabel;
     private String mLatitudeLabel;
     private String mLongitudeLabel;
+    private String mSpeedLabel;
+    private String mHeadingLabel;
     private String mLastUpdateTimeLabel;
 
     /**
@@ -166,12 +170,16 @@ public class MainActivity extends AppCompatActivity {
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark);
         mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
         mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
+        mSpeedTextView = (TextView) findViewById(R.id.speed_text);
+        mHeadingTextView = (TextView) findViewById(R.id.heading_text);
         mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
 
         // Set labels.
         mNextMarkLabel = getResources().getString(R.string.next_mark);
         mLatitudeLabel = getResources().getString(R.string.latitude_label);
         mLongitudeLabel = getResources().getString(R.string.longitude_label);
+        mSpeedLabel = getResources().getString(R.string.speed_label);
+        mHeadingLabel = getResources().getString(R.string.heading_label);
         mLastUpdateTimeLabel = getResources().getString(R.string.last_update_time_label);
 
         mRequestingLocationUpdates = true;
@@ -379,6 +387,8 @@ public class MainActivity extends AppCompatActivity {
         if (mCurrentLocation != null) {
             mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
             mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
+            mSpeedTextView.setText(mSpeedLabel + ": " + mCurrentLocation.getSpeed());
+            mHeadingTextView.setText(mHeadingLabel + ": " + mCurrentLocation.getBearing());
             mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + mLastUpdateTime);
         }
     }
