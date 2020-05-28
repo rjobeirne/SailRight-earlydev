@@ -390,18 +390,6 @@ public class MainActivity extends AppCompatActivity {
         double[] nextMarkCoords = theMarks.getNextMark(nextMark);
         Double nextLat = nextMarkCoords[0];
         Double nextLon = nextMarkCoords[1];
-
-        // Set the reference to the output values here
-//        TextView destMark = findViewById(R.id.next_mark_name);
-//        TextView nextMarkLat = findViewById(R.id.next_mark_lat);
-//        TextView nextMarkLon = findViewById(R.id.next_mark_lon);
-
-        // display Emulator
-//        mNextMarkTextView.setText("Next Mark: " + nextMark);
-//        mLatitudeTextView.setText("Next Mark Lat: " + nextLat.toString());
-//        mLongitudeTextView.setText("Next Mark Lon: " + nextLon.toString());
-
-
     }
 
     /**
