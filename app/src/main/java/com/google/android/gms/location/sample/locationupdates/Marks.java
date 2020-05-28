@@ -22,11 +22,6 @@ public class Marks extends MainActivity{
         this.context = context;
     }
 
-     // Define variables used within this class, and shared between methods
-    private Context context;
-    ArrayList<Mark> marks = null;
-
-    // The next 2 methods create the ArrayList, only done when this object is created
     public double[] getNextMark(String nextMark) {
 
         // String 'nextMark' is passed in, and used to get the correct array entry
@@ -45,6 +40,11 @@ public class Marks extends MainActivity{
 
     }
 
+    // Define variables used within this class, and shared between methods
+    private Context context;
+    ArrayList<Mark> marks = null;
+
+    // The next 2 methods create the ArrayList, only done when this object is created
     public void parseXML() {
         XmlPullParserFactory parserFactory;
         try {
