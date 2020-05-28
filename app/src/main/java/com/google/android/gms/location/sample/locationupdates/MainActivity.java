@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         }
         // Create the ArrayList in the constructor, so only done once
         theMarks.parseXML();
-        nextDest();
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -377,19 +376,6 @@ public class MainActivity extends AppCompatActivity {
           mNextMarkTextView.setText(mNextMarkLabel + ": " + nextMark);
 
           return nextMark;
-    }
-
-
-    /**
-     * Retrieve next mark location
-     */
-    public void nextDest() {
-        // See if the call to Marks works here, Marks Arraylist has been created in the constructor
-        String nextMark = "A Mark";
-
-        double[] nextMarkCoords = theMarks.getNextMark(nextMark);
-        Double nextLat = nextMarkCoords[0];
-        Double nextLon = nextMarkCoords[1];
     }
 
     /**
