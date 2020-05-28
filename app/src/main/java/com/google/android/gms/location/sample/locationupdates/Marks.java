@@ -1,5 +1,6 @@
 package com.google.android.gms.location.sample.locationupdates;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -129,28 +130,56 @@ public class Marks extends MainActivity{
 //
 //    }
 
-    public String nextMark = "F Mark";
-    private TextView txt;
 
-    private void parseXML() {
+
+    public Marks(Context context) throws IllegalAccessException {
+        super();
+        this.context = context;
+    }
+
+     // Define variables used within this class, and shared between methods
+    private Context context;
+    ArrayList<Mark> marks = null;
+
+    // The next 2 methods create the ArrayList, only done when this object is created
+    public double[] getNextMark(String nextMark) {
+
+        // String 'nextMark' is passed in, and used to get the correct array entry
+        double nextMarkCoords[] = new double[2];
+
+        // For each line in the marks ArrayList, in the format of 'Mark'
+        for (Mark mark : marks) {
+            String nextMarkName = mark.name;
+            if (nextMarkName.equals(nextMark)) {
+                nextMarkCoords[0] = Double.parseDouble(mark.lat);
+                nextMarkCoords[1] = Double.parseDouble(mark.lon);
+            }
+        }
+
+        return nextMarkCoords;
+
+    }
+
+    public void parseXML() {
         XmlPullParserFactory parserFactory;
         try {
             parserFactory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = parserFactory.newPullParser();
-            InputStream inputStream = getAssets().open("marks.xml");
+            InputStream inputStream = context.getAssets().open("marks.xml");
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(inputStream, null);
 
-            processParsing(parser);
+            marks = processParsing(parser);
 
-        } catch (XmlPullParserException e) {
-
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
         }
     }
 
-    private void processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
-        ArrayList<Mark> marks = new ArrayList<>();
+    private ArrayList<Mark> processParsing(XmlPullParser parser) throws
+            IOException, XmlPullParserException {
+
+        // create the local (to this method) ArrayList. It will be returned to parseXML method
+        ArrayList<Mark> marks = new ArrayList<Mark>();
         int eventType = parser.getEventType();
         Mark currentMark = null;
 
@@ -178,25 +207,6 @@ public class Marks extends MainActivity{
 
             eventType = parser.next();
         }
-        // Use this if doing next mark selection here
-//        nextMark(marks);
+        return marks;
     }
-
-
-    public Double[] nextMark(ArrayList<Mark> marks) {
-        Double nextMarkCoords[] = new Double[2];
-
-        for (Mark mark : marks) {
-            String nextMarkName = mark.name;
-            if (nextMarkName.equals(nextMark)) {
-            nextMarkCoords[0] = Double.parseDouble(mark.lat);
-            nextMarkCoords[1] = Double.parseDouble(mark.lon);
-            }
-        }
-
-       return(nextMarkCoords);
-
-    }
-
-
 }

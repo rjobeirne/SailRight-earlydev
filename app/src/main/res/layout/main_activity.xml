@@ -35,7 +35,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
           <TextView
-            android:id="@+id/next_mark"
+           android:id="@+id/next_mark_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
@@ -43,7 +43,7 @@
             android:textSize="@dimen/default_text_size" />
 
         <TextView
-            android:id="@+id/latitude_text"
+            android:id="@+id/next_mark_lat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
@@ -51,12 +51,13 @@
             android:textSize="@dimen/default_text_size" />
 
         <TextView
-            android:id="@+id/longitude_text"
+            android:id="@+id/next_mark_lon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
+
         <TextView
             android:id="@+id/speed_text"
             android:layout_width="wrap_content"

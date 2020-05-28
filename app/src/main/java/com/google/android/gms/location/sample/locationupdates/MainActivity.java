@@ -158,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private String mLastUpdateTime;
 
+    // Define the 'Marks' Array
+    Marks theMarks = null;
 //    String  nextMark = "A Mark";
 
     @Override
@@ -165,11 +167,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        //Create the ArrayList object here, for use in all the MainActivity
+        try {
+            theMarks = new Marks(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        // Create the ArrayList in the constructor, so only done once
+        theMarks.parseXML();
+        nextDest();
 
         // Locate the UI widgets.
-        mNextMarkTextView = (TextView) findViewById(R.id.next_mark);
-        mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
-        mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
+        mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
+        mLatitudeTextView = (TextView) findViewById(R.id.next_mark_lat);
+        mLongitudeTextView = (TextView) findViewById(R.id.next_mark_lon);
         mSpeedTextView = (TextView) findViewById(R.id.speed_text);
         mHeadingTextView = (TextView) findViewById(R.id.heading_text);
         mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
@@ -196,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         createLocationCallback();
         createLocationRequest();
         buildLocationSettingsRequest();
+
     }
 
     /**
@@ -286,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             // Check for the integer request code originally supplied to startResolutionForResult().
             case REQUEST_CHECK_SETTINGS:
@@ -370,7 +383,26 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Retrieve next mark location
      */
+    public void nextDest() {
+        // See if the call to Marks works here, Marks Arraylist has been created in the constructor
+        String nextMark = "A Mark";
 
+        double[] nextMarkCoords = theMarks.getNextMark(nextMark);
+        Double nextLat = nextMarkCoords[0];
+        Double nextLon = nextMarkCoords[1];
+
+        // Set the reference to the output values here
+//        TextView destMark = findViewById(R.id.next_mark_name);
+//        TextView nextMarkLat = findViewById(R.id.next_mark_lat);
+//        TextView nextMarkLon = findViewById(R.id.next_mark_lon);
+
+        // display Emulator
+//        mNextMarkTextView.setText("Next Mark: " + nextMark);
+//        mLatitudeTextView.setText("Next Mark Lat: " + nextLat.toString());
+//        mLongitudeTextView.setText("Next Mark Lon: " + nextLon.toString());
+
+
+    }
 
     /**
      * Updates all UI fields.
