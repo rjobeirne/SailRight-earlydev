@@ -34,8 +34,61 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-          <TextView
-           android:id="@+id/next_mark_name"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Current Location"
+            android:textSize="32sp" />
+
+        <TextView
+        android:id="@+id/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
+
+        <TextView
+        android:id="@+id/longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
+
+        <TextView
+        android:id="@+id/speed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
+
+        <TextView
+        android:id="@+id/heading_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
+
+        <TextView
+        android:id="@+id/accuracy_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textSize="@dimen/default_text_size" />
+
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="\nNext Mark"
+        android:textSize="32sp"/>
+
+        <TextView
+            android:id="@+id/next_mark_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
@@ -43,7 +96,7 @@
             android:textSize="@dimen/default_text_size" />
 
         <TextView
-            android:id="@+id/next_mark_lat"
+        android:id="@+id/next_mark_lat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
@@ -58,15 +111,17 @@
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
 
+
+
         <TextView
-            android:id="@+id/speed_text"
+            android:id="@+id/distance_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
         <TextView
-            android:id="@+id/heading_text"
+            android:id="@+id/bearing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/small_margin"

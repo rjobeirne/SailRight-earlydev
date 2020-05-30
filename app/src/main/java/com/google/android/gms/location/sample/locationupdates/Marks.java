@@ -1,6 +1,7 @@
 package com.google.android.gms.location.sample.locationupdates;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -12,8 +13,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-    // Method from https://medium.com/@ssaurel/parsing-xml-data-in-android-apps-71ef607fbb16
+// Method from https://medium.com/@ssaurel/parsing-xml-data-in-android-apps-71ef607fbb16
 
 public class Marks extends MainActivity{
 
@@ -22,22 +24,24 @@ public class Marks extends MainActivity{
         this.context = context;
     }
 
-    public double[] getNextMark(String nextMark) {
+    public Location getNextMark(String nextMark) {
 
         // String 'nextMark' is passed in, and used to get the correct array entry
-        double nextMarkCoords[] = new double[2];
+        Location nextMarkLoc = new Location("");
 
         // For each line in the marks ArrayList, in the format of 'Mark'
         for (Mark mark : marks) {
             String nextMarkName = mark.name;
             if (nextMarkName.equals(nextMark)) {
-                nextMarkCoords[0] = Double.parseDouble(mark.lat);
-                nextMarkCoords[1] = Double.parseDouble(mark.lon);
+                nextMarkLoc.setLatitude(Double.parseDouble(mark.lat));
+                nextMarkLoc.setLongitude(Double.parseDouble(mark.lon));
+                nextMarkLoc.setTime(Calendar.getInstance().getTimeInMillis());
+
+//                nextMarkCoords[1] = Double.parseDouble(mark.lon);
             }
         }
 
-        return nextMarkCoords;
-
+        return nextMarkLoc;
     }
 
     // Define variables used within this class, and shared between methods
