@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Define the 'Marks' Array
     Marks theMarks = null;
+    MarkPicker theMarksList = null;
 
     // Define parameters of next mark
     String nextMark;
@@ -178,10 +181,11 @@ public class MainActivity extends AppCompatActivity {
     float distToMark;
     int bearingToMark;
     float distDisplay;
-    String distUnits;
     String distanceToMark;
     long lastUpdateTime;
     long timeSinceLastUpdate;
+    int pos = 0;
+    int listMarkSize;
 
 
 
@@ -199,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
         }
         // Create the ArrayList in the constructor, so only done once
         theMarks.parseXML();
-//        nextDest();
+        theMarksList.listMarks();
+
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -399,16 +404,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * This method is called when the + button is pressed
+     */
+    public void next_mark(View view) {
+        setNextMark();
+        nextDest();
+
+        // Increment to the position of the next mark on the list
+        if (pos >= listMarkSize - 1) {
+            pos = 0;
+            return;
+        } else
+        pos = pos + 1;
+    }
+
+    public void previous_mark(View view) {
+
+        // Decrement to the position of the previous mark on the list
+        if (pos <= 0) {
+            pos = listMarkSize - 1;
+            return;
+        } else
+        pos = pos - 1;
+    }
+
+    /**
      *  Set next destination mark
      */
-    public String setNextMark() {
+    public void setNextMark() {
 
-        // Temporary assignment of next mark
-        // TODO UI interface
-        nextMark = "Arundel6";
-//          mNextMarkTextView.setText(mNextMarkLabel + ": " + nextMark);
+        ArrayList marksList = theMarksList.listMarks();
+        listMarkSize = marksList.size();
 
-          return nextMark;
+        nextMark = (String) marksList.get(pos);
+
+        nextDest();
     }
 
 
@@ -419,14 +449,6 @@ public class MainActivity extends AppCompatActivity {
         // See if the call to Marks works here, Marks Arraylist has been created in the constructor
 
           destMark = theMarks.getNextMark(nextMark);
-//        Double nextLat = nextMarkCoords[0];
-//        Double nextLon = nextMarkCoords[1];
-
-//        Location destMark = new Location("destMark");
-//        Log.e("***** next mark name", nextMark);
-//        Log.e("********** Dest Mark", String.valueOf(destMark));
-//        Log.e("********** Current", String.valueOf(mCurrentLocation));
-
 
         return destMark;
     }
@@ -437,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
     public void calcDistToMark() {
         if (mCurrentLocation != null) {
             distToMark = mCurrentLocation.distanceTo(destMark);
-//            Log.e("********** Dist", String.valueOf(distToMark));
         }
 
         // Use nautical miles when distToMark is >500m.
@@ -448,7 +469,6 @@ public class MainActivity extends AppCompatActivity {
             distDisplay = distToMark;
             distanceToMark = new DecimalFormat("###0").format(distToMark) + " m";
         }
-
     }
 
     /**
@@ -474,14 +494,10 @@ public class MainActivity extends AppCompatActivity {
     public void calcLastUpdate() {
         if (mCurrentLocation != null) {
             lastUpdateTime = mCurrentLocation.getTime();
-            Log.e("***gps update time", String.valueOf(mCurrentLocation.getTime()/1000));
+
         }
         timeSinceLastUpdate = (Calendar.getInstance().getTimeInMillis() - lastUpdateTime)/1000;
-        Log.e("*******Actual Time", String.valueOf(Calendar.getInstance().getTimeInMillis()/1000));
-        Log.e("***stored update time", String.valueOf(lastUpdateTime/1000));
     }
-
-
 
     /**
      * Updates all UI fields.
@@ -495,15 +511,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         setNextMark();
-        nextDest();
+//        nextDest();
         calcDistToMark();
         calcBearingToMark();
         calcLastUpdate();
-        Log.e("UpdateUI method", String.valueOf(mCurrentLocation));
 
         if (mCurrentLocation != null) {;
 
-            mNextMarkTextView.setText(mNextMarkLabel + ": " + nextMark);
+            mNextMarkTextView.setText(nextMark);
             mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
             mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
             mSpeedTextView.setText(mSpeedLabel + ": " + mCurrentLocation.getSpeed());

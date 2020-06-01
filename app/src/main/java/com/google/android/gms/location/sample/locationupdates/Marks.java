@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
 // Method from https://medium.com/@ssaurel/parsing-xml-data-in-android-apps-71ef607fbb16
 
 public class Marks extends MainActivity{
@@ -26,18 +27,19 @@ public class Marks extends MainActivity{
 
     public Location getNextMark(String nextMark) {
 
+//        nextMark = "A Mark";
         // String 'nextMark' is passed in, and used to get the correct array entry
         Location nextMarkLoc = new Location("");
 
         // For each line in the marks ArrayList, in the format of 'Mark'
         for (Mark mark : marks) {
+
             String nextMarkName = mark.name;
             if (nextMarkName.equals(nextMark)) {
                 nextMarkLoc.setLatitude(Double.parseDouble(mark.lat));
                 nextMarkLoc.setLongitude(Double.parseDouble(mark.lon));
                 nextMarkLoc.setTime(Calendar.getInstance().getTimeInMillis());
-
-//                nextMarkCoords[1] = Double.parseDouble(mark.lon);
+;
             }
         }
 
@@ -71,14 +73,14 @@ public class Marks extends MainActivity{
         ArrayList<Mark> marks = new ArrayList<Mark>();
         int eventType = parser.getEventType();
         Mark currentMark = null;
-
+        ArrayList listMarks = null;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String eltName = null;
+
 
             switch (eventType) {
                 case XmlPullParser.START_TAG:
                     eltName = parser.getName();
-
                     if ("mark".equals(eltName)) {
                         currentMark = new Mark();
                         marks.add(currentMark);
@@ -92,10 +94,14 @@ public class Marks extends MainActivity{
                         }
                     }
                     break;
+
+
             }
 
             eventType = parser.next();
         }
+
         return marks;
     }
+
 }
