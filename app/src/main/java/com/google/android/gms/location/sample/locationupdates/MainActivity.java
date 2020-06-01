@@ -32,6 +32,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -407,25 +409,25 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the + button is pressed
      */
     public void next_mark(View view) {
+        {
+            // Increment to the position of the next mark on the list
+            if (pos >= listMarkSize - 1) {
+                pos = 0;
+            } else
+                pos = pos + 1;
+        }
         setNextMark();
-        nextDest();
-
-        // Increment to the position of the next mark on the list
-        if (pos >= listMarkSize - 1) {
-            pos = 0;
-            return;
-        } else
-        pos = pos + 1;
     }
 
     public void previous_mark(View view) {
-
-        // Decrement to the position of the previous mark on the list
-        if (pos <= 0) {
-            pos = listMarkSize - 1;
-            return;
-        } else
-        pos = pos - 1;
+        {
+            // Decrement to the position of the previous mark on the list
+            if (pos <= 0) {
+                pos = listMarkSize - 1;
+            } else
+                pos = pos - 1;
+        }
+        setNextMark();
     }
 
     /**
@@ -437,10 +439,9 @@ public class MainActivity extends AppCompatActivity {
         listMarkSize = marksList.size();
 
         nextMark = (String) marksList.get(pos);
-
+            mNextMarkTextView.setText(nextMark);
         nextDest();
     }
-
 
     /**
      * Retrieve next mark location
@@ -477,7 +478,6 @@ public class MainActivity extends AppCompatActivity {
     public float calcBearingToMark() {
         if (mCurrentLocation != null) {
             bearingToMark = (int) mCurrentLocation.bearingTo(destMark);
-//            Log.e("********** Bearing", String.valueOf(bearingToMark));
         }
 
         // Correct negative bearings
@@ -518,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (mCurrentLocation != null) {;
 
-            mNextMarkTextView.setText(nextMark);
+//            mNextMarkTextView.setText(nextMark);
             mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
             mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
             mSpeedTextView.setText(mSpeedLabel + ": " + mCurrentLocation.getSpeed());
