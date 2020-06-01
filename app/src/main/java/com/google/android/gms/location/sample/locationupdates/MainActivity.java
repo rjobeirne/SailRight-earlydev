@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
     MarkPicker theMarksList = null;
 
     // Define parameters of next mark
+    String mSpeed;
+    float speedDisplay;
+    String mHeading;
     String nextMark;
     Location destMark;
     float distToMark;
@@ -440,63 +443,8 @@ public class MainActivity extends AppCompatActivity {
 
         nextMark = (String) marksList.get(pos);
             mNextMarkTextView.setText(nextMark);
-        nextDest();
-    }
 
-    /**
-     * Retrieve next mark location
-     */
-    public Location nextDest() {
-        // See if the call to Marks works here, Marks Arraylist has been created in the constructor
-
-          destMark = theMarks.getNextMark(nextMark);
-
-        return destMark;
-    }
-
-    /**
-     *  Determine distance to the next mark
-     */
-    public void calcDistToMark() {
-        if (mCurrentLocation != null) {
-            distToMark = mCurrentLocation.distanceTo(destMark);
-        }
-
-        // Use nautical miles when distToMark is >500m.
-        if ( distToMark >500) {
-            distToMark = distToMark / 1852;
-            distanceToMark = new DecimalFormat("###0.00").format(distToMark) + " NM";
-        } else {
-            distDisplay = distToMark;
-            distanceToMark = new DecimalFormat("###0").format(distToMark) + " m";
-        }
-    }
-
-    /**
-     *  Determine bearing to the next mark
-     */
-    public float calcBearingToMark() {
-        if (mCurrentLocation != null) {
-            bearingToMark = (int) mCurrentLocation.bearingTo(destMark);
-        }
-
-        // Correct negative bearings
-        if ( bearingToMark < 0) {
-            bearingToMark = bearingToMark + 360;
-        }
-
-        return bearingToMark;
-    }
-
-    /**
-     *  Determine time since last update
-     */
-    public void calcLastUpdate() {
-        if (mCurrentLocation != null) {
-            lastUpdateTime = mCurrentLocation.getTime();
-
-        }
-        timeSinceLastUpdate = (Calendar.getInstance().getTimeInMillis() - lastUpdateTime)/1000;
+        destMark = theMarks.getNextMark(nextMark);
     }
 
     /**
@@ -511,23 +459,49 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         setNextMark();
-//        nextDest();
-        calcDistToMark();
-        calcBearingToMark();
-        calcLastUpdate();
 
         if (mCurrentLocation != null) {;
 
-//            mNextMarkTextView.setText(nextMark);
+        // Process gps data for display on UI
+            // Convert speed to knots
+            mSpeed = new DecimalFormat( "##0.00").format( mCurrentLocation.getSpeed() * 1.943844);
+
+            // Change heading to correct format
+             mHeading = String.format("%03d", (int) mCurrentLocation.getBearing());
+
+            // Change distance to mark to nautical miles if > 500m and correct format
+            distToMark = mCurrentLocation.distanceTo(destMark);
+
+                // Use nautical miles when distToMark is >500m.
+                if ( distToMark >500) {
+                    distanceToMark = new DecimalFormat("###0.00").format(distToMark / 1852) + " NM";
+                } else {
+                    distanceToMark = new DecimalFormat("###0").format(distToMark) + " m";
+                }
+
+            // Get bearing to mark
+            bearingToMark = (int) mCurrentLocation.bearingTo(destMark);
+                // Correct negative bearings
+                if ( bearingToMark < 0) {
+                    bearingToMark = bearingToMark + 360;}
+
+            // Get time since last update
+            lastUpdateTime = mCurrentLocation.getTime();
+            timeSinceLastUpdate = (Calendar.getInstance().getTimeInMillis() - lastUpdateTime)/1000;
+
+
+
+
+        // Send info to UI
             mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
             mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
-            mSpeedTextView.setText(mSpeedLabel + ": " + mCurrentLocation.getSpeed());
-            mHeadingTextView.setText(mHeadingLabel + ": " + mCurrentLocation.getBearing());
+            mSpeedTextView.setText(mSpeedLabel + ": " + mSpeed + " kt");
+            mHeadingTextView.setText(mHeadingLabel + ": " + mHeading);
             mAccuracyTextView.setText(mAccuracyTextViewLabel + ": " + mCurrentLocation.getAccuracy() + " m");
             mMarkLatitudeTextView.setText("Mark " + mLatitudeLabel + ": " + destMark.getLatitude());
             mMarkLongitudeTextView.setText("Mark " + mLongitudeLabel + ": " + destMark.getLongitude());
             mDistanceTextView.setText(mDistanceTextViewLabel + ": " + distanceToMark);
-            mBearingTextView.setText(mBearingTextViewLabel + ": " + bearingToMark);
+            mBearingTextView.setText(mBearingTextViewLabel + ": " + String.format("%03d", bearingToMark));
             mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + timeSinceLastUpdate);
         }
     }
