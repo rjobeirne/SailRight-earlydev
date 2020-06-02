@@ -37,6 +37,7 @@
         <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:text="Current Location"
         android:textSize="32sp" />
 
@@ -44,6 +45,7 @@
         android:id="@+id/latitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Latitude"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
         android:textSize="@dimen/default_text_size" />
@@ -52,6 +54,7 @@
         android:id="@+id/longitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Longitude"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
         android:textSize="@dimen/default_text_size" />
@@ -60,6 +63,7 @@
         android:id="@+id/speed_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Speed"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
         android:textSize="@dimen/default_text_size" />
@@ -68,6 +72,7 @@
         android:id="@+id/heading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Heading"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
         android:textSize="@dimen/default_text_size" />
@@ -76,14 +81,24 @@
         android:id="@+id/accuracy_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Accuracy"
         android:layout_marginLeft="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
         android:textSize="@dimen/default_text_size" />
 
+        <TextView
+            android:id="@+id/last_update_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time since last update"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginStart="@dimen/small_margin"
+            android:textSize="@dimen/default_text_size" />
 
         <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:text="\nNext Mark"
         android:textSize="32sp"/>
 
@@ -125,6 +140,7 @@
         android:id="@+id/next_mark_lat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Mark latitude"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
@@ -133,35 +149,37 @@
             android:id="@+id/next_mark_lon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Mark longitude"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
-
-
 
         <TextView
             android:id="@+id/distance_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Distance to Mark"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
+
         <TextView
             android:id="@+id/bearing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Bearing to Mark"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
 
-        <TextView
-            android:id="@+id/last_update_time_text"
+       <TextView
+            android:id="@+id/time_to_mark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Time to Mark"
             android:layout_marginLeft="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:textSize="@dimen/default_text_size" />
-
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

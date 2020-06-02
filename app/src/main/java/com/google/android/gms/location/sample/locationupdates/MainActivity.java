@@ -49,9 +49,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -64,6 +66,7 @@ import java.util.Date;
  * off. The {@code SettingsApi} makes it possible to determine if a device's system settings are
  * adequate for the location request, and to optionally invoke a dialog that allows the user to
  * enable the necessary settings.
+
  * <p/>
  * This sample allows the user to request location updates using the ACCESS_FINE_LOCATION setting
  * (as specified in AndroidManifest.xml).
@@ -144,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mMarkLongitudeTextView;
     private TextView mDistanceTextView;
     private TextView mBearingTextView;
+    private TextView mTimeToMarkTextView;
+
 
     // Labels.
     private String mNextMarkLabel;
@@ -155,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
     private String mDistanceTextViewLabel;
     private String mBearingTextViewLabel;
     private String mLastUpdateTimeLabel;
+    private String mTimeToMarkTextViewLabel;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -169,20 +175,25 @@ public class MainActivity extends AppCompatActivity {
 
     // Define the 'Marks' Array
     Marks theMarks = null;
-    MarksList theMarksList2 = null;
+    MarksList theMarksList = null;
 
     // Define parameters of next mark
-    String mSpeed;
-    float speedDisplay;
-    String mHeading;
+    double mSpeed;
+    double vmgToMark;
+    String speedDisplay;
+    long mHeading;
+    String displayHeading;
     String nextMark;
     Location destMark;
     float distToMark;
     int bearingToMark;
     float distDisplay;
-    String distanceToMark;
+    String displayDistToMark;
+    float distanceToMark;
     long lastUpdateTime;
     long timeSinceLastUpdate;
+    long timeToMark;
+    String ttmDisplay;
 
     int pos = 0;
     int listMarkSize;
@@ -196,14 +207,14 @@ public class MainActivity extends AppCompatActivity {
         //Create the ArrayList object here, for use in all the MainActivity
         try {
             theMarks = new Marks(this);
-            theMarksList2 = new MarksList(this);
+            theMarksList = new MarksList(this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
         // Create the ArrayList in the constructor, so only done once
         theMarks.parseXML();
-        theMarksList2.parseXML();
+        theMarksList.parseXML();
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -217,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         mDistanceTextView = (TextView) findViewById(R.id.distance_text);
         mBearingTextView = (TextView) findViewById(R.id.bearing_text);
         mLastUpdateTimeTextView = (TextView) findViewById(R.id.last_update_time_text);
+        mTimeToMarkTextView = (TextView) findViewById(R.id.time_to_mark);
 
         // Set labels.
         mNextMarkLabel = getResources().getString(R.string.next_mark);
@@ -228,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         mDistanceTextViewLabel = getResources().getString(R.string.distance_label);
         mBearingTextViewLabel = getResources().getString(R.string.bearing_label);
         mLastUpdateTimeLabel = getResources().getString(R.string.last_update_time_label);
+        mTimeToMarkTextViewLabel =getResources().getString(R.string.time_to_mark_label);
 
         mRequestingLocationUpdates = true;
         mLastUpdateTime = "";
@@ -407,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void next_mark(View view) {
         {
-            // Increment to the position of the next mark on the list
+            // Increment to the position of the nMath.abs(ext mark on the list
             if (pos >= listMarkSize - 1) {
                 pos = 0;
             } else
@@ -432,9 +445,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setNextMark() {
 
-        ArrayList marksList2 = theMarksList2.marksList;
-        listMarkSize = marksList2.size();
-        nextMark = (String) marksList2.get(pos);
+        ArrayList marksList = theMarksList.marksList;
+        listMarkSize = marksList.size();
+        nextMark = (String) marksList.get(pos);
 
         mNextMarkTextView.setText(nextMark);
 
@@ -448,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
         updateLocationUI();
     }
 
-    /**
+    /**Math.abs(
      * Sets the value of the UI fields for the location latitude, longitude and last update time.
      */
     private void updateLocationUI() {
@@ -458,19 +471,21 @@ public class MainActivity extends AppCompatActivity {
 
         // Process gps data for display on UI
             // Convert speed to knots and format
-            mSpeed = new DecimalFormat( "##0.00").format( mCurrentLocation.getSpeed() * 1.943844);
+            mSpeed = mCurrentLocation.getSpeed() * 1.943844;
+            speedDisplay = new DecimalFormat( "##0.00").format( mSpeed);
 
             // Change heading to correct format
-             mHeading = String.format("%03d", (int) mCurrentLocation.getBearing());
+            mHeading = (long) mCurrentLocation.getBearing();
+            displayHeading = String.format("%03d", (int) mHeading);
 
             // Change distance to mark to nautical miles if > 500m and correct format
             distToMark = mCurrentLocation.distanceTo(destMark);
 
                 // Use nautical miles when distToMark is >500m.
                 if ( distToMark >500) {
-                    distanceToMark = new DecimalFormat("###0.00").format(distToMark / 1852) + " NM";
+                    displayDistToMark = new DecimalFormat("###0.00").format(distToMark / 1852) + " NM";
                 } else {
-                    distanceToMark = new DecimalFormat("###0").format(distToMark) + " m";
+                    displayDistToMark = new DecimalFormat("###0").format(distToMark) + " m";
                 }
 
             // Get bearing to mark
@@ -483,20 +498,37 @@ public class MainActivity extends AppCompatActivity {
             lastUpdateTime = mCurrentLocation.getTime();
             timeSinceLastUpdate = (Calendar.getInstance().getTimeInMillis() - lastUpdateTime)/1000;
 
+            // Calculate time to the mark
+            mSpeed = (float) mCurrentLocation.getSpeed();
 
+            // Calc time to mark
+            vmgToMark = Math.cos(mHeading - bearingToMark) * mSpeed;
 
+            if (vmgToMark > 0) {
+                timeToMark = (long) (distToMark / vmgToMark);
+
+                ttmDisplay = String.format("%02dh %02d' %02d\"",
+                    TimeUnit.SECONDS.toHours(timeToMark),
+                    TimeUnit.SECONDS.toMinutes(timeToMark) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(timeToMark)),
+                    TimeUnit.SECONDS.toSeconds(timeToMark) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(timeToMark)));
+            } else {
+                ttmDisplay = "--h --' --\"";
+            }
 
         // Send info to UI
             mLatitudeTextView.setText(mLatitudeLabel + ": " + mCurrentLocation.getLatitude());
             mLongitudeTextView.setText(mLongitudeLabel + ": " + mCurrentLocation.getLongitude());
-            mSpeedTextView.setText(mSpeedLabel + ": " + mSpeed + " kt");
+            mSpeedTextView.setText(mSpeedLabel + ": " + speedDisplay + " kt");
             mHeadingTextView.setText(mHeadingLabel + ": " + mHeading);
             mAccuracyTextView.setText(mAccuracyTextViewLabel + ": " + mCurrentLocation.getAccuracy() + " m");
             mMarkLatitudeTextView.setText("Mark " + mLatitudeLabel + ": " + destMark.getLatitude());
             mMarkLongitudeTextView.setText("Mark " + mLongitudeLabel + ": " + destMark.getLongitude());
-            mDistanceTextView.setText(mDistanceTextViewLabel + ": " + distanceToMark);
+            mDistanceTextView.setText(mDistanceTextViewLabel + ": " + displayDistToMark);
             mBearingTextView.setText(mBearingTextViewLabel + ": " + String.format("%03d", bearingToMark));
             mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + timeSinceLastUpdate);
+            mTimeToMarkTextView.setText(mTimeToMarkTextViewLabel + ": " + ttmDisplay);
         }
     }
 

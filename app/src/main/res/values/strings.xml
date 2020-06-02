@@ -26,6 +26,7 @@
     <string name="bearing_label">Bearing to Mark</string>
     <string name="last_update_time_label">Time since last update</string>
     <string name="accuracy">Accuracy</string>
+    <string name="time_to_mark_label">Time to Mark</string>
 
     <string name="start_updates">Start updates</string>
     <string name="stop_updates">Stop updates</string>
