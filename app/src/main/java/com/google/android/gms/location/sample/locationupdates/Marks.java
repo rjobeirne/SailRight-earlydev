@@ -2,9 +2,7 @@ package com.google.android.gms.location.sample.locationupdates;
 
 import android.content.Context;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -13,6 +11,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 
@@ -39,7 +38,7 @@ public class Marks extends MainActivity{
                 nextMarkLoc.setLatitude(Double.parseDouble(mark.lat));
                 nextMarkLoc.setLongitude(Double.parseDouble(mark.lon));
                 nextMarkLoc.setTime(Calendar.getInstance().getTimeInMillis());
-;
+
             }
         }
 
@@ -49,6 +48,7 @@ public class Marks extends MainActivity{
     // Define variables used within this class, and shared between methods
     private Context context;
     ArrayList<Mark> marks = null;
+    ArrayList<MarkList> listMarks2 = null;
 
     // The next 2 methods create the ArrayList, only done when this object is created
     public void parseXML() {
@@ -61,6 +61,7 @@ public class Marks extends MainActivity{
             parser.setInput(inputStream, null);
 
             marks = processParsing(parser);
+//            listMarks2 = processParsing2(parser);
 
         } catch (XmlPullParserException | IOException e) {
         }
@@ -73,7 +74,6 @@ public class Marks extends MainActivity{
         ArrayList<Mark> marks = new ArrayList<Mark>();
         int eventType = parser.getEventType();
         Mark currentMark = null;
-        ArrayList listMarks = null;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String eltName = null;
 
@@ -104,4 +104,36 @@ public class Marks extends MainActivity{
         return marks;
     }
 
+//    private ArrayList<MarkList> processParsing2(XmlPullParser parser) throws
+//            IOException, XmlPullParserException {
+//
+//        // create the local (to this method) ArrayList. It will be returned to parseXML method
+//        ArrayList<MarkList> listMarks2 = new ArrayList<MarkList>();
+//        int eventType = parser.getEventType();
+//        MarkList currentMarkName = null;
+//        while (eventType != XmlPullParser.END_DOCUMENT) {
+//            String eltName = null;
+//
+//
+//            switch (eventType) {
+//                case XmlPullParser.START_TAG:
+//                    eltName = parser.getName();
+//                    if ("mark".equals(eltName)) {
+//                        currentMarkName = new MarkList();
+//                        listMarks2.add(currentMarkName);
+//                    } else if (currentMarkName != null) {
+//                        if ("name".equals(eltName)) {
+//                            currentMarkName.name = parser.nextText();
+//                        }
+//                        break;
+//                    }
+//                    eventType = parser.next();
+//            }
+//        }
+//        Log.e("***** listMarks array", String.valueOf(listMarks2));
+//        return listMarks2;
+//
+//    }
+
 }
+

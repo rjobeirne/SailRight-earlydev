@@ -32,8 +32,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -46,18 +44,14 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -175,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Define the 'Marks' Array
     Marks theMarks = null;
-    MarkPicker theMarksList = null;
+    MarksList theMarksList2 = null;
 
     // Define parameters of next mark
     String mSpeed;
@@ -189,10 +183,9 @@ public class MainActivity extends AppCompatActivity {
     String distanceToMark;
     long lastUpdateTime;
     long timeSinceLastUpdate;
+
     int pos = 0;
     int listMarkSize;
-
-
 
 
     @Override
@@ -203,13 +196,14 @@ public class MainActivity extends AppCompatActivity {
         //Create the ArrayList object here, for use in all the MainActivity
         try {
             theMarks = new Marks(this);
+            theMarksList2 = new MarksList(this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
         // Create the ArrayList in the constructor, so only done once
         theMarks.parseXML();
-        theMarksList.listMarks();
-
+        theMarksList2.parseXML();
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -438,11 +432,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setNextMark() {
 
-        ArrayList marksList = theMarksList.listMarks();
-        listMarkSize = marksList.size();
+        ArrayList marksList2 = theMarksList2.marksList;
+        listMarkSize = marksList2.size();
+        nextMark = (String) marksList2.get(pos);
 
-        nextMark = (String) marksList.get(pos);
-            mNextMarkTextView.setText(nextMark);
+        mNextMarkTextView.setText(nextMark);
 
         destMark = theMarks.getNextMark(nextMark);
     }
@@ -463,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
         if (mCurrentLocation != null) {;
 
         // Process gps data for display on UI
-            // Convert speed to knots
+            // Convert speed to knots and format
             mSpeed = new DecimalFormat( "##0.00").format( mCurrentLocation.getSpeed() * 1.943844);
 
             // Change heading to correct format
