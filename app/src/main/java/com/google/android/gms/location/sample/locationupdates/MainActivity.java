@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Define the 'Marks' Array
     Marks theMarks = null;
-    MarksList theMarksList = null;
 
     // Define parameters of next mark
     double mSpeed;
@@ -204,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
     int pos = 0;
     int listMarkSize;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
         // first check for runtime permission
         String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
         int grant = ContextCompat.checkSelfPermission(this, permission);
-        Log.e("*** Permissions", permission);
 
         if (grant != PackageManager.PERMISSION_GRANTED) {
             String[] permission_list = new String[1];
@@ -224,12 +221,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Create the ArrayList object here, for use in all the MainActivity
-        try {
-            theMarks = new Marks();
-            theMarksList = new MarksList(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        theMarks = new Marks();
 
         // Create the ArrayList in the constructor, so only done once
         try {
@@ -237,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        theMarksList.parseXML();
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -467,16 +458,10 @@ public class MainActivity extends AppCompatActivity {
      *  Set next destination mark
      */
     public void setNextMark() {
-
-        ArrayList marksList = theMarksList.marksList;
-        listMarkSize = marksList.size();
-        nextMark = (String) marksList.get(pos);
-//        nextMark = theMarks.marks.get(pos).getmarkName();
-
+        listMarkSize = theMarks.marks.size();
+        nextMark = theMarks.marks.get(pos).getmarkName();
         mNextMarkTextView.setText(nextMark);
-
         destMark = theMarks.getNextMark(nextMark);
-        Log.e("*** Mark lat", String.valueOf(destMark.getLatitude()));
     }
 
     /**

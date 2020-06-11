@@ -54,7 +54,6 @@ public class Marks{
         try {
             dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(yourFile);
-            Log.e("***** doc", String.valueOf(doc));
             doc.getDocumentElement().normalize();
 
             Log.e("Root_element" , doc.getDocumentElement().getNodeName());
@@ -77,8 +76,6 @@ public class Marks{
         } catch (SAXException | ParserConfigurationException | IOException e1) {
             e1.printStackTrace();
         }
-        Log.e("**** marks =", String.valueOf(marks.size()));
-//        return  marks;
     }
 
     // Find the coordinates of the next mark
@@ -99,10 +96,10 @@ public class Marks{
                 nextMarkLoc.setTime(Calendar.getInstance().getTimeInMillis());
             break;
             }
-                Log.e("***** try this mark", marks.get(i).getmarkName());
+//                Log.e("***** try this mark", marks.get(i).getmarkName());
         }
-        Log.e("*** nextMark =", nextMark);
-        Log.e("****nextMarkLoc =", String.valueOf(nextMarkLoc));
+//        Log.e("*** nextMark =", nextMark);
+        Log.e("****nextMarkLoc =", nextMark + " " + String.valueOf(nextMarkLoc));
 
         return nextMarkLoc;
     }
