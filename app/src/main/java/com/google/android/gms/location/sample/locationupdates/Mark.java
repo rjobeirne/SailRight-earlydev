@@ -2,7 +2,7 @@ package com.google.android.gms.location.sample.locationupdates;
 
 public class Mark {
 
-    String markName, markLat, markLon;
+    String markName, markLat, markLatDeg, markLatMin, markLon, markLonDeg, markLonMin;
 
     public String getmarkName() {
         return markName;
@@ -12,21 +12,52 @@ public class Mark {
         this.markName = markName;
     }
 
-    public String getmarkLat() {
+    public String getMarkLat() {
         return markLat;
     }
 
-    public void setmarkLat(String markLat) {
+    public String getMarkLatDeg() {
+        return markLatDeg;
+    }
+
+    public String getMarkLatMin() {
+        return markLatMin;
+    }
+
+    public void setMarkLat(String markLat) {
         this.markLat = markLat;
     }
 
-    public String getmarkLon() {
+    public void setMarkLatDeg(String markLatDeg) {
+        this.markLatDeg = markLatDeg;
+    }
+
+    public void setMarkLatMin(String markLatMin) {
+        this.markLatMin = markLatMin;
+    }
+
+    public String getMarkLon() {
         return markLon;
     }
 
-    public void setmarkLon(String markLon) {
+    public String getMarkLonDeg() {
+        return markLonDeg;
+    }
+
+    public String getMarkLonMin() {
+        return markLonMin;
+    }
+
+    public void setMarkLon(String markLon) {
         this.markLon = markLon;
     }
 
+    public void setMarkLonDeg(String markLonDeg) {
+        this.markLonDeg = markLonDeg;
+    }
+
+    public void setMarkLonMin(String markLonMin) {
+        this.markLonMin = markLonMin;
+    }
 
 }

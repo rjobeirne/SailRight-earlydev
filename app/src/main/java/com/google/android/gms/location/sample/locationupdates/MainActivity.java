@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
     String displayHeading;
     String nextMark = "A Mark";
     Location destMark;
+    Double destMarkLat, destMarkLon;
     float distToMark;
     int bearingToMark;
     float distDisplay;
@@ -490,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
             mHeading = (long) mCurrentLocation.getBearing();
             displayHeading = String.format("%03d", (int) mHeading);
 
-            // Change distance to mark to nautical miles if > 500m and correct format
+            // Change distance to mark to nautical miles if > 500m and correct formattring.format decimal places
             distToMark = mCurrentLocation.distanceTo(destMark);
 
                 // Use nautical miles when distToMark is >500m.
@@ -536,8 +537,8 @@ public class MainActivity extends AppCompatActivity {
             mSpeedTextView.setText(mSpeedLabel + ": " + speedDisplay + " kt");
             mHeadingTextView.setText(mHeadingLabel + ": " + mHeading);
             mAccuracyTextView.setText(mAccuracyTextViewLabel + ": " + mCurrentLocation.getAccuracy() + " m");
-            mMarkLatitudeTextView.setText("Mark " + mLatitudeLabel + ": " + destMark.getLatitude());
-            mMarkLongitudeTextView.setText("Mark " + mLongitudeLabel + ": " + destMark.getLongitude());
+            mMarkLatitudeTextView.setText("Mark " + mLatitudeLabel + ": " + String.format("%.4f", destMark.getLatitude()));
+            mMarkLongitudeTextView.setText("Mark " + mLongitudeLabel + ": " + String.format("%.4f", destMark.getLongitude()));
             mDistanceTextView.setText(mDistanceTextViewLabel + ": " + displayDistToMark);
             mBearingTextView.setText(mBearingTextViewLabel + ": " + String.format("%03d", bearingToMark));
             mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + timeSinceLastUpdate);

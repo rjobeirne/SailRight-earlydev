@@ -60,6 +60,7 @@ public class Marks{
             NodeList nodeList = doc.getElementsByTagName("mark");
 
             marks = new ArrayList<Mark>();
+            String markLat, markLon;
 
             for (int i = 0; i < nodeList.getLength(); i++) {
 
@@ -68,8 +69,13 @@ public class Marks{
                 // Create an ArrayList of mark names and coords from the parsed marks.gpx file
                 Mark model = new Mark();
                 model.setmarkName(element.getAttribute("name"));
-                model.setmarkLat(element.getAttribute("lat"));
-                model.setmarkLon(element.getAttribute("lon" ));
+                markLat = "-" + String.valueOf(Double.parseDouble(element.getAttribute("lat_deg")) +
+                        Double.parseDouble(element.getAttribute("lat_min"))/60 );
+                markLon = String.valueOf(Double.parseDouble(element.getAttribute("lon_deg")) +
+                        Double.parseDouble(element.getAttribute("lon_min"))/60) ;
+
+                model.setMarkLat(markLat);
+                model.setMarkLon(markLon);
                 marks.add(model);
             }
 
@@ -87,12 +93,10 @@ public class Marks{
 
         for (int i = 0; i < marks.size(); i++) {
             tryMark = marks.get(i).getmarkName();
-            tryLat = Double.parseDouble(marks.get(i).getmarkLat());
-            tryLon = Double.parseDouble(marks.get(i).getmarkLon());
 
             if (tryMark.equals(nextMark)) {
-                nextMarkLoc.setLatitude(tryLat);
-                nextMarkLoc.setLongitude(tryLon);
+                nextMarkLoc.setLatitude(Double.parseDouble(marks.get(i).getMarkLat()));
+                nextMarkLoc.setLongitude(Double.parseDouble(marks.get(i).getMarkLon()));
                 nextMarkLoc.setTime(Calendar.getInstance().getTimeInMillis());
             break;
             }
