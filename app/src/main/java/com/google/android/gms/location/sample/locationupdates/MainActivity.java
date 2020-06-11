@@ -28,6 +28,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.provider.Settings;
 import android.util.Log;
@@ -51,6 +52,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     String speedDisplay;
     long mHeading;
     String displayHeading;
-    String nextMark;
+    String nextMark = "A Mark";
     Location destMark;
     float distToMark;
     int bearingToMark;
@@ -208,16 +210,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        ArrayList<Mark> marks = new ArrayList<>();
+
+        // first check for runtime permission
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        int grant = ContextCompat.checkSelfPermission(this, permission);
+        Log.e("*** Permissions", permission);
+
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            String[] permission_list = new String[1];
+            permission_list[0] = permission;
+            ActivityCompat.requestPermissions(this, permission_list, 1);
+        }
+
         //Create the ArrayList object here, for use in all the MainActivity
         try {
-            theMarks = new Marks(this);
+            theMarks = new Marks();
             theMarksList = new MarksList(this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
         // Create the ArrayList in the constructor, so only done once
-        theMarks.parseXML();
+        try {
+            theMarks.parseXML();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         theMarksList.parseXML();
 
         // Locate the UI widgets.
@@ -452,10 +471,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayList marksList = theMarksList.marksList;
         listMarkSize = marksList.size();
         nextMark = (String) marksList.get(pos);
+//        nextMark = theMarks.marks.get(pos).getmarkName();
 
         mNextMarkTextView.setText(nextMark);
 
         destMark = theMarks.getNextMark(nextMark);
+        Log.e("*** Mark lat", String.valueOf(destMark.getLatitude()));
     }
 
     /**
@@ -469,7 +490,9 @@ public class MainActivity extends AppCompatActivity {
      * Sets the value of the UI fields for the location latitude, longitude and last update time.
      */
     private void updateLocationUI() {
-        setNextMark();
+        if (destMark == null) {
+            setNextMark();
+        }
 
         if (mCurrentLocation != null) {;
 
@@ -494,6 +517,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Get bearing to mark
             bearingToMark = (int) mCurrentLocation.bearingTo(destMark);
+
                 // Correct negative bearings
                 if ( bearingToMark < 0) {
                     bearingToMark = bearingToMark + 360;}
