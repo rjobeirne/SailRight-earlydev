@@ -461,6 +461,9 @@ public class MainActivity extends AppCompatActivity {
     public void setNextMark() {
         listMarkSize = theMarks.marks.size();
         nextMark = theMarks.marks.get(pos).getmarkName();
+        if (nextMark.length() == 1){
+            nextMark = nextMark + " Mark";
+        }
         mNextMarkTextView.setText(nextMark);
         destMark = theMarks.getNextMark(nextMark);
     }
