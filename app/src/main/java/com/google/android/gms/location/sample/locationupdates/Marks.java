@@ -38,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class Marks{
 
     ArrayList<Mark> marks = new ArrayList<>();
+    ArrayList listNames = new ArrayList();
 
     // Parse the marks.gpx file to an ArrayList of name and
   public void parseXML() throws IOException {
@@ -60,6 +61,7 @@ public class Marks{
             NodeList nodeList = doc.getElementsByTagName("mark");
 
             marks = new ArrayList<Mark>();
+            listNames = new ArrayList<>();
             String markLat, markLon;
 
             for (int i = 0; i < nodeList.getLength(); i++) {
@@ -77,6 +79,7 @@ public class Marks{
                 model.setMarkLat(markLat);
                 model.setMarkLon(markLon);
                 marks.add(model);
+                listNames.add(element.getAttribute("name"));
             }
 
         } catch (SAXException | ParserConfigurationException | IOException e1) {
@@ -103,7 +106,7 @@ public class Marks{
 //                Log.e("***** try this mark", marks.get(i).getmarkName());
         }
 //        Log.e("*** nextMark =", nextMark);
-        Log.e("****nextMarkLoc =", nextMark + " " + String.valueOf(nextMarkLoc));
+//        Log.e("****nextMarkLoc =", nextMark + " " + String.valueOf(nextMarkLoc));
 
         return nextMarkLoc;
     }

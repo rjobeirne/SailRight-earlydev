@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mStartUpdatesButton;
     private Button mStopUpdatesButton;
     private TextView mNextMarkTextView;
+    private TextView mCourseTextView;
     private TextView mLastUpdateTimeTextView;
     private TextView mLatitudeTextView;
     private TextView mLongitudeTextView;
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Labels.
     private String mNextMarkLabel;
+    private String mCourseLabel;
     private String mLatitudeLabel;
     private String mLongitudeLabel; //           return distToMark
     private String mSpeedLabel;
@@ -181,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Define the 'Marks' Array
     Marks theMarks = null;
+    Courses theCourses = null;
 
     // Define parameters of next mark
     double mSpeed;
@@ -201,8 +204,11 @@ public class MainActivity extends AppCompatActivity {
     long timeToMark;
     String ttmDisplay;
 
-    int pos = 0;
-    int listMarkSize;
+    int posMark = 0;
+    int posCourse = 0;
+    int listMarkSize, listCourseSize;
+    String raceCourse;
+    ArrayList courseMarks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
 
         ArrayList<Mark> marks = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
+        ArrayList courseMarks = new ArrayList();
 
         // first check for runtime permission
         String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -223,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Create the ArrayList object here, for use in all the MainActivity
         theMarks = new Marks();
+        theCourses = new Courses();
 
         // Create the ArrayList in the constructor, so only done once
         try {
@@ -231,8 +240,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        try {
+            theCourses.parseXML();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
+        mCourseTextView = (TextView) findViewById(R.id.course_name);
         mLatitudeTextView = (TextView) findViewById(R.id.latitude);
         mLongitudeTextView = (TextView) findViewById(R.id.longitude);
         mSpeedTextView = (TextView) findViewById(R.id.speed_text);
@@ -429,6 +445,47 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+    /**
+     * This method is called when the + course button is pressed
+     */
+    public void next_course(View view) {
+        {
+            // Increment to the position of the next course on the list
+            if (posCourse >= listCourseSize - 1) {
+                posCourse = 0;
+            } else
+                posCourse = posCourse + 1;
+        }
+        setCourse();
+        setNextMark();
+    }
+
+    public void previous_course(View view) {
+        {
+            // Decrement to the position of the previous course on the list
+            if (posCourse <= 0) {
+                posCourse = listCourseSize - 1;
+            } else
+                posCourse = posCourse - 1;
+        }
+        setCourse();
+        setNextMark();
+    }
+
+    /**
+     *  Set race course
+     */
+    public void setCourse() {
+        listCourseSize = theCourses.courses.size();
+        Log.e("**listCSize, posCourse", String.valueOf(listCourseSize) + " " + posCourse);
+        raceCourse = theCourses.courses.get(posCourse).getCourseName();
+        courseMarks = theCourses.getCourse(raceCourse);
+
+        mCourseTextView.setText(raceCourse);
+//        ArrayList raceCourse = theCourses.getCourse("NUMERAL 1");theCourses
+    }
+
+
 
     /**
      * This method is called when the + button is pressed
@@ -436,10 +493,10 @@ public class MainActivity extends AppCompatActivity {
     public void next_mark(View view) {
         {
             // Increment to the position of the nMath.abs(ext mark on the list
-            if (pos >= listMarkSize - 1) {
-                pos = 0;
+            if (posMark >= listMarkSize - 1) {
+                posMark = 0;
             } else
-                pos = pos + 1;
+                posMark = posMark + 1;
         }
         setNextMark();
     }
@@ -447,10 +504,10 @@ public class MainActivity extends AppCompatActivity {
     public void previous_mark(View view) {
         {
             // Decrement to the position of the previous mark on the list
-            if (pos <= 0) {
-                pos = listMarkSize - 1;
+            if (posMark <= 0) {
+                posMark = listMarkSize - 1;
             } else
-                pos = pos - 1;
+                posMark = posMark - 1;
         }
         setNextMark();
     }
@@ -459,8 +516,15 @@ public class MainActivity extends AppCompatActivity {
      *  Set next destination mark
      */
     public void setNextMark() {
-        listMarkSize = theMarks.marks.size();
-        nextMark = theMarks.marks.get(pos).getmarkName();
+        if (raceCourse.equals("None")) {
+            listMarkSize = theMarks.marks.size();
+            nextMark = theMarks.marks.get(posMark).getmarkName();
+
+        } else {
+            listMarkSize = courseMarks.size();
+            nextMark = (String) courseMarks.get(posMark);
+        }
+
         if (nextMark.length() == 1){
             nextMark = nextMark + " Mark";
         }
@@ -480,6 +544,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         if (destMark == null) {
+            setCourse();
             setNextMark();
         }
 
