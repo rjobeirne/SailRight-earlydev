@@ -92,7 +92,6 @@ public class Marks{
 
         Location nextMarkLoc = new Location("");
         String tryMark;
-        Double tryLat, tryLon;
 
         for (int i = 0; i < marks.size(); i++) {
             tryMark = marks.get(i).getmarkName();

@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Represents a geographical location.
      */
-    private Location mCurrentLocation;
+    public Location mCurrentLocation;
 
     // UI Widgets.
     private Button mStartUpdatesButton;
@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
     long mHeading;
     String displayHeading;
     String nextMark = "A Mark";
+    String nextMarkFull;
     Location destMark;
     Double destMarkLat, destMarkLon;
     float distToMark;
@@ -477,7 +478,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setCourse() {
         listCourseSize = theCourses.courses.size();
-        Log.e("**listCSize, posCourse", String.valueOf(listCourseSize) + " " + posCourse);
         raceCourse = theCourses.courses.get(posCourse).getCourseName();
         courseMarks = theCourses.getCourse(raceCourse);
 
@@ -526,10 +526,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (nextMark.length() == 1){
-            nextMark = nextMark + " Mark";
+            nextMarkFull = nextMark + " Mark";
+        } else {
+            nextMarkFull = nextMark;
         }
-        mNextMarkTextView.setText(nextMark);
+
+        mNextMarkTextView.setText(nextMarkFull);
+
+        // Check to see if next mark is not the finish
+        if (!nextMark.equals("Finish")) {
+            // set the next mark
         destMark = theMarks.getNextMark(nextMark);
+        } else {
+//        destMark = FinishLine.findFinishPoint(mCurrentLocation);
+        }
+
     }
 
     /**
