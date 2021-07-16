@@ -216,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList courseMarks;
     Bundle savedInstanceState;
 
+
+    // Adding lots of comments to the file
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
