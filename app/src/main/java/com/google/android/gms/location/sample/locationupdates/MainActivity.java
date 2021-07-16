@@ -211,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
     String raceCourse;
     ArrayList courseMarks;
 
+
+    // Adding lots of comments to the file
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
