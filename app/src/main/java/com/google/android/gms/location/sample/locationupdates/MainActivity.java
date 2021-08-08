@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private SettingsClient mSettingsClient;
 
-    /**
+    /**Next Mark
      * Stores parameters for requests to the FusedLocationProviderApi.
      */
     private LocationRequest mLocationRequest;
@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mMarkLongitudeTextView;
     private TextView mDistanceTextView;
     private TextView mBearingTextView;
+    private TextView mDiscrepTextView;
     private TextView mTimeToMarkTextView;
 
 
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private String mLongitudeLabel; //           return distToMark
     private String mSpeedLabel;
     private String mHeadingLabel;
+    private String mDiscrepTextViewLabel;
     private String mAccuracyTextViewLabel;
     private String mDistanceTextViewLabel;
     private String mBearingTextViewLabel;
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
     // Define the 'Marks' Array
     Marks theMarks = null;
     Courses theCourses = null;
+    FinishLine theFinish = null;
 
     // Define parameters of next mark
     double mSpeed;
@@ -197,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     Double destMarkLat, destMarkLon;
     float distToMark;
     int bearingToMark;
+    int bearingDiscrepancy;
     float distDisplay;
     String displayDistToMark;
     float distanceToMark;
@@ -210,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
     int listMarkSize, listCourseSize;
     String raceCourse;
     ArrayList courseMarks;
+    Bundle savedInstanceState;
 
 
     // Adding lots of comments to the file
@@ -242,12 +247,21 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        // Load all courses
         try {
             theCourses.parseXML();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Create theFinish object here, and pass in 'A' Mark, and 'H' Mark
+        String a = "A"; // Finish line data
+        String h = "H"; // Finish Line Data
+        Location aMark = theMarks.getNextMark(a);
+        Location hMark = theMarks.getNextMark(h);
+        // Should have A Mark, H Mark to create the Finish Line Object
+        theFinish = new FinishLine(aMark, hMark);
+
 
         // Locate the UI widgets.
         mNextMarkTextView = (TextView) findViewById(R.id.next_mark_name);
@@ -318,6 +332,13 @@ public class MainActivity extends AppCompatActivity {
             // Update the value of mLastUpdateTime from the Bundle and update the UI.
             if (savedInstanceState.keySet().contains(KEY_LAST_UPDATED_TIME_STRING)) {
                 mLastUpdateTime = savedInstanceState.getString(KEY_LAST_UPDATED_TIME_STRING);
+            }
+
+            if (savedInstanceState.keySet().contains("Mark Pos")) {
+               posMark = savedInstanceState.getInt("Mark Pos");
+               nextMark = savedInstanceState.getString("Next Mark");
+               posCourse = savedInstanceState.getInt("Course Pos");
+               raceCourse = savedInstanceState.getString("Course");
             }
             updateUI();
         }
@@ -535,12 +556,27 @@ public class MainActivity extends AppCompatActivity {
 
         mNextMarkTextView.setText(nextMarkFull);
 
-        // Check to see if next mark is not the finish
-        if (!nextMark.equals("Finish")) {
-            // set the next mark
-        destMark = theMarks.getNextMark(nextMark);
+        // Check to see if next mark is the finish
+        if (nextMark.equals("Finish")) {
+
+//          // Find the the target point on the finish line (A Mark, H Mark or Line)
+            // Pass in the currentLocation
+            nextMark =  theFinish.getFinishTarget(mCurrentLocation);
+
+            if (nextMark.equals("Line")) {
+                // Insert the finish line crossing point
+                destMark = theFinish.getFinishPoint(mCurrentLocation);
+            } else {
+                // Set the next mark to either A or H
+                mNextMarkTextView.setText("Fin - " + nextMark + " Mark");
+                destMark = theMarks.getNextMark(nextMark);
+                Log.e("nextMark, destMark", nextMark + "  " + destMark);
+                Log.e("destMark Fin", String.valueOf(destMark));
+            }
+
         } else {
-//        destMark = FinishLine.findFinishPoint(mCurrentLocation);
+        destMark = theMarks.getNextMark(nextMark);
+        Log.e("nextMark, destMark Norm", nextMark +  "  " + String.valueOf(destMark));
         }
 
     }
@@ -589,6 +625,9 @@ public class MainActivity extends AppCompatActivity {
                 if ( bearingToMark < 0) {
                     bearingToMark = bearingToMark + 360;}
 
+            // Calculate discrepancy between heading and bearing to mark
+            bearingDiscrepancy = (int) mHeading - bearingToMark;
+
             // Get time since last update
             lastUpdateTime = mCurrentLocation.getTime();
             timeSinceLastUpdate = (Calendar.getInstance().getTimeInMillis() - lastUpdateTime)/1000;
@@ -622,6 +661,7 @@ public class MainActivity extends AppCompatActivity {
             mMarkLongitudeTextView.setText("Mark " + mLongitudeLabel + ": " + String.format("%.4f", destMark.getLongitude()));
             mDistanceTextView.setText(mDistanceTextViewLabel + ": " + displayDistToMark);
             mBearingTextView.setText(mBearingTextViewLabel + ": " + String.format("%03d", bearingToMark));
+//            mDiscrepTextView.setText(mDiscrepTextViewLabel + ": " + String.format("%03d", bearingDiscrepancy));
             mLastUpdateTimeTextView.setText(mLastUpdateTimeLabel + ": " + timeSinceLastUpdate);
             mTimeToMarkTextView.setText(mTimeToMarkTextViewLabel + ": " + ttmDisplay);
         }
@@ -630,9 +670,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        updateValuesFromBundle(savedInstanceState);
+
         // Within {@code onPause()}, we remove location updates. Here, we resume receiving
         // location updates if the user has requested them.
-        if (mRequestingLocationUpdates && checkPermissions()) {
+                if (mRequestingLocationUpdates && checkPermissions()) {
             startLocationUpdates();
         } else if (!checkPermissions()) {
             requestPermissions();
@@ -648,6 +690,10 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putBoolean(KEY_REQUESTING_LOCATION_UPDATES, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
         savedInstanceState.putString(KEY_LAST_UPDATED_TIME_STRING, mLastUpdateTime);
+        savedInstanceState.putInt("Mark Pos", posMark);
+        savedInstanceState.putInt("Course Pos", posCourse);
+        savedInstanceState.putString("Next Mark", nextMark);
+        savedInstanceState.putString("Course", raceCourse);
         super.onSaveInstanceState(savedInstanceState);
     }
 

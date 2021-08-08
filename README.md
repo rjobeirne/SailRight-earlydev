@@ -8,7 +8,7 @@ services Location APIs.
 
 Introduction
 ============
-
+I added this bit just to confuse.<p><image width=50 height=50 src="./SailRight.png"></p>
 This sample builds on the BasicLocationSample sample included in this repo,
 and allows the user to request periodic location updates. In response, the API
 updates the app periodically with the best available location, based on the
