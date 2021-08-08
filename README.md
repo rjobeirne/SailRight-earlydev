@@ -28,6 +28,7 @@ To run this sample, **location must be enabled**.
 
 Prerequisites
 --------------
+These are the prerequisites
 
 - Android API Level >v9
 - Android Build Tools >v21
