@@ -15,6 +15,8 @@ Add line 3
 
 This is the line I added for NewBranch
 
+And this is the line for NewBranch2
+
 
 Introduction
 ============
